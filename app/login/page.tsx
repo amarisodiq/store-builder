@@ -127,7 +127,7 @@ export default function AuthPage() {
                   className="text-green-500 hover:underline"
                   onClick={() => setMode("forgot")}
                 >
-                  Forgotten Password? Click Here
+                  Forgotten Password?
                 </button>
               </div>
             )}
