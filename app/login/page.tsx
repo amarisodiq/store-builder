@@ -91,7 +91,7 @@ export default function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
 
@@ -107,7 +107,7 @@ export default function AuthPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
             )}
