@@ -54,8 +54,17 @@ export default async function ProductsPage() {
                 </p>
               </div>
 
-              <div className="text-sm text-gray-500">
-                {new Date(product.created_at).toLocaleDateString()}
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <span>
+                  {new Date(product.created_at).toLocaleDateString()}
+                </span>
+
+                <Link
+                  href={`/dashboard/products/${product.id}/edit`}
+                  className="underline"
+                >
+                  Edit
+                </Link>
               </div>
             </div>
           ))}
