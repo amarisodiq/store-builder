@@ -31,15 +31,18 @@ export default async function DashboardPage() {
 
       <div className="flex gap-3">
         <a
-          href={`/store/${business.slug}`}
+          href={`/store/${business.slug}/products`}
           className="bg-black text-white px-4 py-2 rounded"
         >
           View Store
         </a>
 
-        <button className="border px-4 py-2 rounded">
+        <a
+          href={`/dashboard/products`}
+          className="border px-4 py-2 rounded"
+        >
           Store Settings
-        </button>
+        </a>
       </div>
     </div>
   )

@@ -14,7 +14,7 @@ export default async function ProductsPage() {
 
   const { data: business } = await supabase
     .from("businesses")
-    .select("id")
+    .select("id, slug")
     .eq("owner_id", user.id)
     .single();
 
@@ -22,7 +22,7 @@ export default async function ProductsPage() {
 
   const { data: products } = await supabase
     .from("products")
-    .select("id, name, price, created_at")
+    .select("id, name, price, description, image_url")
     .eq("business_id", business.id)
     .order("created_at", { ascending: false });
 
@@ -36,6 +36,12 @@ export default async function ProductsPage() {
         >
           Add Product
         </Link>
+         <a
+          href={`/store/${business.slug}/products`}
+          className="bg-black text-white px-4 py-2 rounded"
+        >
+          View Store
+        </a>
       </div>
 
       <ProductList products={products ?? []} />

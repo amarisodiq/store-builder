@@ -8,10 +8,7 @@ export default function ProductList({ products }: { products: any[] }) {
     const ok = confirm("Delete this product?");
     if (!ok) return;
 
-    const { error } = await supabase
-      .from("products")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("products").delete().eq("id", id);
 
     if (error) {
       alert(error.message);
@@ -27,11 +24,21 @@ export default function ProductList({ products }: { products: any[] }) {
           key={product.id}
           className="flex items-center justify-between p-4 border-b last:border-b-0"
         >
-          <div>
-            <p className="font-medium">{product.name}</p>
-            <p className="text-sm text-gray-500">
-              ₦{Number(product.price).toLocaleString()}
-            </p>
+          <div className="flex items-center gap-4">
+            {product.image_url && (
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="h-24 w-24 object-cover rounded"
+              />
+            )}
+
+            <div>
+              <p className="font-medium">{product.name}</p>
+              <p className="text-sm text-gray-500">
+                ₦{Number(product.price).toLocaleString()}
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-4 text-sm">

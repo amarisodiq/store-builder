@@ -13,7 +13,11 @@ export default function AddProductPage() {
   const [price, setPrice] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 1️⃣ Get the user's business
+  // Image states
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+
   useEffect(() => {
     const loadBusiness = async () => {
       const {
@@ -42,19 +46,55 @@ export default function AddProductPage() {
     loadBusiness();
   }, [router]);
 
-  // 2️⃣ Create product
+  // Upload image to Supabase Storage
+  const uploadImage = async (file: File) => {
+    setUploading(true);
+
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${businessId}/${Date.now()}.${fileExt}`; // unique file name
+
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .upload(fileName, file, { upsert: true });
+
+    if (uploadError) {
+      alert(uploadError.message);
+      setUploading(false);
+      return null;
+    }
+
+    const { data } = supabase.storage
+      .from("product-images")
+      .getPublicUrl(fileName);
+
+    setUploading(false);
+    return data.publicUrl;
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    setImageFile(e.target.files[0]);
+  };
+
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!businessId) return;
 
     setLoading(true);
+
+    let uploadedImageUrl = imageUrl;
+
+    if (imageFile) {
+      uploadedImageUrl = await uploadImage(imageFile);
+    }
 
     const { error } = await supabase.from("products").insert({
       business_id: businessId,
       name,
       description,
       price: Number(price),
+      image_url: uploadedImageUrl || null,
     });
 
     setLoading(false);
@@ -96,8 +136,21 @@ export default function AddProductPage() {
           className="border p-2 w-full"
         />
 
+        <div className="space-y-2">
+          <label className="block font-medium">Product Image</label>
+          {imageFile && (
+            <img
+              src={URL.createObjectURL(imageFile)}
+              alt="Product image"
+              className="h-32 w-32 object-cover rounded border"
+            />
+          )}
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+          {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
+        </div>
+
         <button
-          disabled={loading}
+          disabled={loading || uploading}
           className="bg-black text-white px-4 py-2 disabled:opacity-50"
         >
           {loading ? "Saving..." : "Add Product"}
