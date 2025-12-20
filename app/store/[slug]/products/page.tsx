@@ -27,6 +27,10 @@ export default async function StoreProductsPage({
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
+      <Link href="/cart" className="underline">
+  View Cart
+</Link>
+
       <h1 className="text-3xl font-bold mb-6">{business.name}</h1>
 
       {products && products.length > 0 ? (

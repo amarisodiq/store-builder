@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+// import AddToCartButton from "./AddToCartButton";
+import AddToCartButton from "@/app/components/AddToCartButton";
+
 
 export default async function ProductDetailPage({
   params,
@@ -9,23 +12,20 @@ export default async function ProductDetailPage({
   const { slug, productId } = await params;
   const supabase = await createSupabaseServerClient();
 
-  // 1️⃣ Get business by slug
   const { data: business } = await supabase
     .from("businesses")
-    .select("id, name")
+    .select("id")
     .eq("slug", slug)
     .single();
 
   if (!business) return notFound();
 
-  // 2️⃣ Get product
   const { data: product } = await supabase
-  .from("products")
-  .select("id, name, price, description, image_url")
-  .eq("id", productId)
-  .eq("business_id", business.id)
-  .single();
-
+    .from("products")
+    .select("id, name, price, description, image_url")
+    .eq("id", productId)
+    .eq("business_id", business.id)
+    .single();
 
   if (!product) return notFound();
 
@@ -41,7 +41,7 @@ export default async function ProductDetailPage({
 
       <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
 
-      <p className="text-xl text-gray-700 mb-4">
+      <p className="text-xl mb-4">
         ₦{Number(product.price).toLocaleString()}
       </p>
 
@@ -49,9 +49,8 @@ export default async function ProductDetailPage({
         <p className="text-gray-600 mb-6">{product.description}</p>
       )}
 
-      <button className="bg-black text-white px-6 py-3 rounded">
-        Add to cart
-      </button>
+      {/* ✅ CLIENT BUTTON */}
+      <AddToCartButton product={product} />
     </div>
   );
 }
